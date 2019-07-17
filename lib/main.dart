@@ -1,4 +1,10 @@
+//Copyright 2019 Fabian Stach. All rights reserved.
+
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:battery/battery.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Diagnostic Tool',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -20,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Diagnostic Tool'),
     );
   }
 }
@@ -44,6 +50,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Battery _battery = Battery();
+
+  BatteryState _batteryState;
+  StreamSubscription<BatteryState> _batteryStateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _batteryStateSubscription =
+        _battery.onBatteryStateChanged.listen(BatteryState state) {
+      setState(() {
+        _batteryState = state;
+      });
+    });
+  }
+
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -70,6 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.settings), onPressed: _openSettings),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -107,5 +133,21 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+
+  void _openSettings() {
+    //TODO funktionalität
+
+    /*
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<>
+        }
+      )
+    )
+
+    */
   }
 }
